@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitchen Express - Menú</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #CC0000;
+    --dark-red: #8B0000;
+    --yellow: #FFD700;
+    --amber: #FFA500;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --charcoal: #1A1A1A;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--black);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === ANIMATED BG === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(204,0,0,0.45) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 10%, rgba(255,215,0,0.25) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 80%, rgba(139,0,0,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 70%, rgba(255,165,0,0.2) 0%, transparent 40%),
+      radial-gradient(ellipse at 10% 90%, rgba(204,0,0,0.3) 0%, transparent 40%);
+    z-index: 0;
+    animation: bgPulse 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes bgPulse {
+    0%   { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+
+  /* diagonal stripe overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 30px,
+      rgba(255,215,0,0.03) 30px,
+      rgba(255,215,0,0.03) 31px
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .wrapper { position: relative; z-index: 1; }
+
+  /* === HEADER === */
+  header {
+    position: relative;
+    background: linear-gradient(135deg, var(--dark-red) 0%, var(--black) 40%, var(--charcoal) 70%, #1a0000 100%);
+    border-bottom: 3px solid var(--yellow);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(204,0,0,0.08) 60px,
+      rgba(204,0,0,0.08) 61px
+    );
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 20px;
+  }
+
+  .logo-wrap {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid var(--yellow);
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(204,0,0,0.3);
+    background: var(--dark-red);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 0 25px rgba(255,215,0,0.4), 0 0 50px rgba(204,0,0,0.3); }
+    50%       { box-shadow: 0 0 45px rgba(255,215,0,0.7), 0 0 80px rgba(204,0,0,0.5); }
+  }
+
+  .logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .brand-block { flex: 1; text-align: center; }
+
+  .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 88px);
+    letter-spacing: 6px;
+    line-height: 1;
+    background: linear-gradient(90deg, var(--yellow) 0%, #fff 40%, var(--amber) 70%, var(--yellow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 8px rgba(255,215,0,0.5));
+  }
+
+  .brand-sub {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: rgba(255,215,0,0.7);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .header-accent {
+    width: 110px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .fire-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--red), var(--dark-red));
+    border: 2px solid var(--yellow);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    text-transform: uppercase;
+  }
+
+  /* === CATEGORIES NAV === */
+  .cat-nav {
+    background: rgba(0,0,0,0.7);
+    border-bottom: 1px solid rgba(255,215,0,0.2);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .cat-nav-inner {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .cat-btn {
+    background: transparent;
+    border: 1px solid rgba(255,215,0,0.25);
+    color: rgba(255,255,255,0.6);
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .cat-btn:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255,215,0,0.08);
+  }
+
+  .cat-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--yellow);
+    font-weight: 600;
+    box-shadow: 0 2px 12px rgba(204,0,0,0.5);
+  }
+
+  /* === MENU CONTENT === */
+  .menu-section { max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,215,0,0.4), transparent);
+  }
+
+  .section-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
+  }
+
+  /* GRID */
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .menu-card {
+    background: linear-gradient(135deg, rgba(26,0,0,0.9) 0%, rgba(20,20,20,0.95) 100%);
+    border: 1px solid rgba(255,215,0,0.12);
+    border-left: 3px solid var(--red);
+    border-radius: 6px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.25s ease;
+    animation: cardIn 0.4s ease both;
+    cursor: default;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .menu-card:hover {
+    border-left-color: var(--yellow);
+    border-color: rgba(255,215,0,0.3);
+    background: linear-gradient(135deg, rgba(40,0,0,0.95) 0%, rgba(28,20,20,0.98) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(204,0,0,0.25);
+  }
+
+  .card-info { flex: 1; }
+
+  .card-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+
+  .card-desc {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .card-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 9px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .tag-pop  { background: rgba(204,0,0,0.3); color: #ff8080; border: 1px solid rgba(204,0,0,0.5); }
+  .tag-nuevo { background: rgba(255,215,0,0.2); color: var(--yellow); border: 1px solid rgba(255,215,0,0.4); }
+  .tag-hot  { background: rgba(255,100,0,0.25); color: #ffaa55; border: 1px solid rgba(255,100,0,0.4); }
+  .tag-pep  { background: rgba(0,70,150,0.3); color: #66aaff; border: 1px solid rgba(0,70,150,0.5); }
+
+  .card-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px rgba(255,215,0,0.3));
+    padding-top: 2px;
+  }
+
+  /* === FOOTER === */
+  footer {
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.95));
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid rgba(255,215,0,0.15);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 5px;
+    color: rgba(255,215,0,0.4);
+  }
+
+  .footer-line {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+    margin-top: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (max-width: 600px) {
+    .header-inner { padding: 16px 20px; }
+    .header-accent { display: none; }
+    .items-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <a href="https://imgbb.com/"><img src="https://i.ibb.co/Y7dLfB88/505836938-122115137372870460-9076544102655722391-n.jpg" alt="505836938-122115137372870460-9076544102655722391-n" border="0" /></a>
+      </div>
+      <div class="brand-block">
+        <div class="brand-name">Kitchen Express</div>
+        <div class="brand-sub">De lo tradicional a un paladar más exigente</div>
+      </div>
+      <div class="header-accent">
+        <div class="fire-badge">Menú 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORIES NAV -->
+  <nav class="cat-nav">
+    <div class="cat-nav-inner" id="cat-nav">
+      <button class="cat-btn active" onclick="showSection('pollo')">Pollo</button>
+      <button class="cat-btn" onclick="showSection('combos')">Combos</button>
+      <button class="cat-btn" onclick="showSection('complementos')">Complementos</button>
+      <button class="cat-btn" onclick="showSection('bebidas')">Bebidas</button>
+      <button class="cat-btn" onclick="showSection('postres')">Postres</button>
+    </div>
+  </nav>
+
+  <!-- MENU CONTENT -->
+  <main>
+    <!-- POLLO -->
+    <section class="menu-section" id="sec-pollo">
+      <div class="section-header">
+        <div class="section-icon">🍗</div>
+        <div class="section-title">Pollo al Estilo Kentucky</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" style="animation-delay:0.05s">
+          <div class="card-info">
+            <div class="card-name">Pollo Original Crujiente</div>
+            <div class="card-desc">Pieza de pollo marinada 24 h con mezcla secreta de 11 hierbas y especias, empanizado doble y frito a presión. Dorado perfecto por fuera, jugoso por dentro.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$55</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.1s">
+          <div class="card-info">
+            <div class="card-name">Pollo Picante Express</div>
+            <div class="card-desc">Mismo empanizado clásico + capa de cayena, chile ancho y pimienta negra. Picante equilibrado con sabor profundo. Para los que le gustan las emociones.</div>
+            <div class="card-tags"><span class="tag tag-hot">Picante</span><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$58</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.15s">
+          <div class="card-info">
+            <div class="card-name">Tiras de Pollo Crispy</div>
+            <div class="card-desc">Filetes de pechuga en tiras largas, empanizadas extra crujientes. Acompañadas de salsa ranch o BBQ a elección. Perfectas para compartir.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$75</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.2s">
+          <div class="card-info">
+            <div class="card-name">Alitas Kentucky BBQ</div>
+            <div class="card-desc">6 alitas bañadas en salsa BBQ ahumada con toque de miel y ajo. Horneadas primero, fritas después. Caramelizadas y adictivas.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$85</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.25s">
+          <div class="card-info">
+            <div class="card-name">Sandwich Pollo Crujiente</div>
+            <div class="card-desc">Filete de pechuga empanizada en pan brioche tostado, lechuga crespa, pepinillos artesanales y mayonesa de chipotle. El favorito de la casa.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$95</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.3s">
+          <div class="card-info">
+            <div class="card-name">Muslos Doble Empanizado</div>
+            <div class="card-desc">Muslos jugosos con cobertura extra gruesa, crujiente al máximo. Marinado en suero de leche y especias 24 horas. Gran sabor en cada mordida.</div>
+            <div class="card-tags"><span class="tag tag-hot">Especial</span></div>
+          </div>
+          <div class="card-price">$65</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMBOS -->
+    <section class="menu-section" id="sec-combos" style="display:none">
+      <div class="section-header">
+        <div class="section-icon">🍱</div>
+        <div class="section-title">Combos Express</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" style="animation-delay:0.05s">
+          <div class="card-info">
+            <div class="card-name">Combo Individual</div>
+            <div class="card-desc">1 pieza de pollo original + papas medianas + bebida 400ml. El clásico que nunca falla.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$120</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.1s">
+          <div class="card-info">
+            <div class="card-name">Combo Doble Fuego</div>
+            <div class="card-desc">2 piezas de pollo (original o picante) + papas grandes + bebida 600ml + dip BBQ.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$185</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.15s">
+          <div class="card-info">
+            <div class="card-name">Combo Familiar (4 personas)</div>
+            <div class="card-desc">8 piezas de pollo mixto + 2 papas grandes + 4 bebidas 400ml + 2 elotes. ¡Para toda la familia!</div>
+            <div class="card-tags"><span class="tag tag-hot">Especial</span></div>
+          </div>
+          <div class="card-price">$480</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.2s">
+          <div class="card-info">
+            <div class="card-name">Combo Sandwich Express</div>
+            <div class="card-desc">Sandwich de pollo crujiente + papas medianas + bebida 400ml. Rápido, delicioso, satisfactorio.</div>
+            <div class="card-tags"><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$155</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.25s">
+          <div class="card-info">
+            <div class="card-name">Combo Alitas Party</div>
+            <div class="card-desc">12 alitas BBQ + papas grandes + 2 bebidas + 2 dips a elección. Ideal para compartir.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$290</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPLEMENTOS -->
+    <section class="menu-section" id="sec-complementos" style="display:none">
+      <div class="section-header">
+        <div class="section-icon">🍟</div>
+        <div class="section-title">Complementos</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" style="animation-delay:0.05s">
+          <div class="card-info">
+            <div class="card-name">Papas Fritas</div>
+            <div class="card-desc">Corte recto, fritas en aceite de primera. Pequeñas $30 · Medianas $40 · Grandes $55</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">desde $30</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.1s">
+          <div class="card-info">
+            <div class="card-name">Puré de Papa con Gravy</div>
+            <div class="card-desc">Puré cremoso de papa amarilla con salsa gravy de pollo artesanal. Comfort food en su máxima expresión.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$45</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.15s">
+          <div class="card-info">
+            <div class="card-name">Elote en Vaso</div>
+            <div class="card-desc">Granos de elote dulce con mantequilla, mayonesa, queso cotija y chile piquín. Adictivo y delicioso.</div>
+            <div class="card-tags"><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$40</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.2s">
+          <div class="card-info">
+            <div class="card-name">Ensalada Coleslaw</div>
+            <div class="card-desc">Col blanca y morada, zanahoria rallada y aderezo cremoso de mostaza con miel. Fresca y crunchy.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$35</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.25s">
+          <div class="card-info">
+            <div class="card-name">Pan de Maíz</div>
+            <div class="card-desc">Porción de pan de maíz esponjoso al estilo sureño, con mantequilla de miel. 2 piezas.</div>
+            <div class="card-tags"></div>
+          </div>
+          <div class="card-price">$28</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.3s">
+          <div class="card-info">
+            <div class="card-name">Dips y Salsas</div>
+            <div class="card-desc">Ranch, BBQ ahumado, Chipotle, Sriracha, Mostaza con miel. Para acompañar todo.</div>
+            <div class="card-tags"></div>
+          </div>
+          <div class="card-price">$12</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEBIDAS -->
+    <section class="menu-section" id="sec-bebidas" style="display:none">
+      <div class="section-header">
+        <div class="section-icon">🥤</div>
+        <div class="section-title">Bebidas</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="items-grid">
+        <!-- Aguas naturales -->
+        <div class="menu-card" style="animation-delay:0.05s">
+          <div class="card-info">
+            <div class="card-name">Agua de Jamaica</div>
+            <div class="card-desc">Flor de jamaica natural, con el equilibrio justo de dulzor. Fría, refrescante y hecha diario. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$30</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.1s">
+          <div class="card-info">
+            <div class="card-name">Agua de Sandía con Limón</div>
+            <div class="card-desc">Sandía fresca licuada con jugo de limón y un toque de sal. Veraniega y deliciosa. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$35</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.15s">
+          <div class="card-info">
+            <div class="card-name">Agua de Mango con Chile</div>
+            <div class="card-desc">Mango Ataulfo natural con chamoy, tajín y limón. Agua fresca de sabor intenso y tropical. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span><span class="tag tag-hot">Picante</span></div>
+          </div>
+          <div class="card-price">$38</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.2s">
+          <div class="card-info">
+            <div class="card-name">Agua de Maracuyá</div>
+            <div class="card-desc">Fruta de la pasión natural con azúcar y agua mineral. Tropical y refrescante. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$38</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.25s">
+          <div class="card-info">
+            <div class="card-name">Agua de Horchata</div>
+            <div class="card-desc">Arroz con canela, vainilla y azúcar. Cremosa y refrescante. Receta tradicional. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$30</div>
+        </div>
+        <!-- Pepsi products -->
+        <div class="menu-card" style="animation-delay:0.3s">
+          <div class="card-info">
+            <div class="card-name">Pepsi</div>
+            <div class="card-desc">La cola clásica que todos conocen. Fría y con hielo. 355ml lata · 600ml botella.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span></div>
+          </div>
+          <div class="card-price">$28 / $38</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.35s">
+          <div class="card-info">
+            <div class="card-name">Pepsi Black (Zero Azúcar)</div>
+            <div class="card-desc">Todo el sabor de Pepsi sin azúcar añadida. Para quienes cuidan su consumo. 355ml lata.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span></div>
+          </div>
+          <div class="card-price">$28</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.4s">
+          <div class="card-info">
+            <div class="card-name">7UP</div>
+            <div class="card-desc">Lima-limón fresco y burbujas. Perfecta para acompañar el pollo crujiente. 355ml lata.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span></div>
+          </div>
+          <div class="card-price">$28</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.45s">
+          <div class="card-info">
+            <div class="card-name">Mirinda Naranja</div>
+            <div class="card-desc">Sabor naranja vibrante y refrescante. Un clásico siempre presente. 355ml lata.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span></div>
+          </div>
+          <div class="card-price">$28</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.5s">
+          <div class="card-info">
+            <div class="card-name">Gatorade</div>
+            <div class="card-desc">Bebida deportiva hidratante. Sabores: Limón, Frutas Tropicales, Naranja. 500ml.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$32</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.55s">
+          <div class="card-info">
+            <div class="card-name">Agua Epura</div>
+            <div class="card-desc">Agua purificada natural o mineralizada. La opción ligera y saludable. 600ml.</div>
+            <div class="card-tags"><span class="tag tag-pep">Pepsi</span></div>
+          </div>
+          <div class="card-price">$18</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POSTRES -->
+    <section class="menu-section" id="sec-postres" style="display:none">
+      <div class="section-header">
+        <div class="section-icon">🍰</div>
+        <div class="section-title">Postres</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="items-grid">
+        <div class="menu-card" style="animation-delay:0.05s">
+          <div class="card-info">
+            <div class="card-name">Pastel de Chocolate Express</div>
+            <div class="card-desc">Brownie húmedo de chocolate con centro de crema de cacahuate. Tibio y delicioso.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$55</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.1s">
+          <div class="card-info">
+            <div class="card-name">Sundae de Vainilla con Caramelo</div>
+            <div class="card-desc">Helado cremoso de vainilla con salsa de caramelo artesanal y nuez. El clásico de siempre.</div>
+            <div class="card-tags"><span class="tag tag-pop">Popular</span></div>
+          </div>
+          <div class="card-price">$45</div>
+        </div>
+        <div class="menu-card" style="animation-delay:0.15s">
+          <div class="card-info">
+            <div class="card-name">Pay de Limón Express</div>
+            <div class="card-desc">Base crocante de galleta, relleno de crema de limón, topping de merengue tostado. Fresco y ligero.</div>
+            <div class="card-tags"><span class="tag tag-nuevo">Nuevo</span></div>
+          </div>
+          <div class="card-price">$50</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Kitchen Express</div>
+    <div class="footer-line">De lo tradicional a un paladar más exigente, solo aquí</div>
+  </footer>
+</div>
+
+<script>
+  function showSection(id) {
+    const secs = ['pollo','combos','complementos','bebidas','postres'];
+    secs.forEach(s => {
+      document.getElementById('sec-' + s).style.display = (s === id) ? 'block' : 'none';
+    });
+    document.querySelectorAll('.cat-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', secs[i] === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
